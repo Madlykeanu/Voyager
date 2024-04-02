@@ -4,6 +4,11 @@ import os
 import time
 from typing import Dict
 
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s')
+
 import voyager.utils as U
 from .env import VoyagerEnv
 
@@ -163,6 +168,7 @@ class Voyager:
         self.last_events = None
 
     def reset(self, task, context="", reset_env=True):
+        logging.debug(f"Resetting with task: {task}, context: {context}, reset_env: {reset_env}")
         self.action_agent_rollout_num_iter = 0
         self.task = task
         self.context = context
@@ -201,6 +207,7 @@ class Voyager:
         self.env.close()
 
     def step(self):
+        logging.debug(f"Stepping with action_agent_rollout_num_iter: {self.action_agent_rollout_num_iter}")
         if self.action_agent_rollout_num_iter < 0:
             raise ValueError("Agent must be reset before stepping")
         ai_message = self.action_agent.llm(self.messages)
@@ -285,6 +292,7 @@ class Voyager:
         return self.messages, 0, done, info
 
     def rollout(self, *, task, context, reset_env=True):
+        logging.debug(f"Rolling out with task: {task}, context: {context}, reset_env: {reset_env}")
         self.reset(task=task, context=context, reset_env=reset_env)
         while True:
             messages, reward, done, info = self.step()
@@ -293,6 +301,7 @@ class Voyager:
         return messages, reward, done, info
 
     def learn(self, reset_env=True):
+        logging.debug(f"Learning with reset_env: {reset_env}")
         if self.resume:
             # keep the inventory
             self.env.reset(
@@ -368,6 +377,7 @@ class Voyager:
         }
 
     def decompose_task(self, task):
+        logging.debug(f"Decomposing task: {task}")
         if not self.last_events:
             self.last_events = self.env.reset(
                 options={
@@ -378,6 +388,7 @@ class Voyager:
         return self.curriculum_agent.decompose_task(task, self.last_events)
 
     def inference(self, task=None, sub_goals=[], reset_mode="hard", reset_env=True):
+        logging.debug(f"Inferencing with task: {task}, sub_goals: {sub_goals}, reset_mode: {reset_mode}, reset_env: {reset_env}")
         if not task and not sub_goals:
             raise ValueError("Either task or sub_goals must be provided")
         if not sub_goals:
