@@ -5,8 +5,10 @@ from voyager import Voyager
 openai_api_key = "YOUR_API_KEY"
 
 voyager = Voyager(
-    mc_port=53988,
+    mc_port=25565,
     openai_api_key=openai_api_key,
+    env_request_timeout=10200,
+    # skill_library_dir="./skill_library/trial1", # Load a learned skill library.
 )
 
 # start lifelong learning

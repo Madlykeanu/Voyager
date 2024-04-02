@@ -11,6 +11,8 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.vectorstores import Chroma
 
+from .LocalLLM import LocalLLM
+
 
 class CurriculumAgent:
     def __init__(
@@ -26,16 +28,8 @@ class CurriculumAgent:
         warm_up=None,
         core_inventory_items: str | None = None,
     ):
-        self.llm = ChatOpenAI(
-            model_name=model_name,
-            temperature=temperature,
-            request_timeout=request_timout,
-        )
-        self.qa_llm = ChatOpenAI(
-            model_name=qa_model_name,
-            temperature=qa_temperature,
-            request_timeout=request_timout,
-        )
+        self.llm = LocalLLM()
+        self.qa_llm = LocalLLM()
         assert mode in [
             "auto",
             "manual",

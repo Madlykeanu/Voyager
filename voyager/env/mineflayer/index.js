@@ -97,19 +97,22 @@ app.post("/start", (req, res) => {
             bot.iron_pickaxe = true;
         }
 
-        const { pathfinder } = require("mineflayer-pathfinder");
-        const tool = require("mineflayer-tool").plugin;
-        const collectBlock = require("mineflayer-collectblock").plugin;
-        const pvp = require("mineflayer-pvp").plugin;
-        const minecraftHawkEye = require("minecrafthawkeye");
-        bot.loadPlugin(pathfinder);
-        bot.loadPlugin(tool);
-        bot.loadPlugin(collectBlock);
-        bot.loadPlugin(pvp);
-        bot.loadPlugin(minecraftHawkEye);
+        try {
+            const { pathfinder } = require("mineflayer-pathfinder");
+            const tool = require("mineflayer-tool").plugin;
+            const collectBlock = require("mineflayer-collectblock").plugin;
+            const pvp = require("mineflayer-pvp").plugin;
+            const minecraftHawkEye = require("minecrafthawkeye");
 
-        // bot.collectBlock.movements.digCost = 0;
-        // bot.collectBlock.movements.placeCost = 0;
+            bot.loadPlugin(pathfinder);
+            bot.loadPlugin(tool);
+            bot.loadPlugin(collectBlock);
+            bot.loadPlugin(pvp);
+            bot.loadPlugin(minecraftHawkEye);
+        } catch (err) {
+            console.error("Error loading plugins:", err);
+            bot.emit("error", err);
+        }
 
         obs.inject(bot, [
             OnChat,
@@ -224,7 +227,7 @@ app.post("/step", async (req, res) => {
         }
     }
 
-    bot.on("physicTick", onTick);
+    bot.on("physicsTick", onTick);
 
     // initialize fail count
     let _craftItemFailCount = 0;
@@ -250,7 +253,7 @@ app.post("/step", async (req, res) => {
         response_sent = true;
         res.json(bot.observe());
     }
-    bot.removeListener("physicTick", onTick);
+    bot.removeListener("physicsTick", onTick);
 
     async function evaluateCode(code, programs) {
         // Echo the code produced for players to see it. Don't echo when the bot code is already producing dialog or it will double echo

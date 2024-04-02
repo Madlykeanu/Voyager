@@ -6,6 +6,7 @@ from javascript import require
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import SystemMessagePromptTemplate
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from .LocalLLM import LocalLLM
 
 from voyager.prompts import load_prompt
 from voyager.control_primitives_context import load_control_primitives_context
@@ -31,11 +32,7 @@ class ActionAgent:
             self.chest_memory = U.load_json(f"{ckpt_dir}/action/chest_memory.json")
         else:
             self.chest_memory = {}
-        self.llm = ChatOpenAI(
-            model_name=model_name,
-            temperature=temperature,
-            request_timeout=request_timout,
-        )
+        self.llm = LocalLLM()
 
     def update_chest_memory(self, chests):
         for position, chest in chests.items():
@@ -278,3 +275,4 @@ class ActionAgent:
                 if item:
                     chatlog.add(item)
         return "I also need " + ", ".join(chatlog) + "." if chatlog else ""
+

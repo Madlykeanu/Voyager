@@ -187,3 +187,4 @@ class VoyagerEnv(gym.Env):
             else:
                 print(res.json())
         return self.server_paused
+
