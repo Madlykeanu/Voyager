@@ -27,11 +27,13 @@ app.post("/start", (req, res) => {
     bot = null;
     console.log(req.body);
     bot = mineflayer.createBot({
-        host: "localhost", // minecraft server ip
-        port: req.body.port, // minecraft server port
-        username: "bot",
-        disableChatSigning: true,
-        checkTimeoutInterval: 60 * 60 * 1000,
+        host: 'localhost', // Minecraft server IP (change this to your server's IP)
+        port: 25565,       // server port, 25565 by default
+        username: 'madlykeanu@gmail.com', // Your Mojang or Microsoft account email
+        auth: 'microsoft', // Use 'mojang' for Mojang accounts, 'microsoft' for Microsoft accounts
+        version: '1.20.2',
+        //disableChatSigning: true,
+        //checkTimeoutInterval: 60 * 60 * 1000,
     });
     bot.once("error", onConnectionFailed);
 
@@ -135,9 +137,9 @@ app.post("/start", (req, res) => {
     });
 
     function onConnectionFailed(e) {
-        console.log(e);
+        console.error("Connection failed with error:", e);
         bot = null;
-        res.status(400).json({ error: e });
+        res.status(400).json({ error: e.toString() });
     }
     function onDisconnect(message) {
         if (bot.viewer) {

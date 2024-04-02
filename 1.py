@@ -5,7 +5,7 @@ from voyager import Voyager
 openai_api_key = "YOUR_API_KEY"
 
 voyager = Voyager(
-    mc_port=51874,
+    mc_port=53988,
     openai_api_key=openai_api_key,
 )
 
